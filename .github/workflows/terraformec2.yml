@@ -18,7 +18,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-        # Step 2: Check Terraform Version
+      # Step 2: Check Terraform Version
       - name: Check Terraform Version
         run: |
           if ! terraform --version &> /dev/null; then
@@ -29,12 +29,11 @@ jobs:
             terraform --version
           fi
 
-
       # Step 3: Configure AWS Credentials
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESSKEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRETKEY }}
           aws-region: us-east-1
 
@@ -51,12 +50,12 @@ jobs:
         run: terraform plan -out=tfplan
         if: success()
 
-    manual-apply:
-      name: Manual Terraform Apply
-      needs: terraform
-      runs-on: ubuntu-latest
+  manual-apply:
+    name: Manual Terraform Apply
+    needs: terraform
+    runs-on: ubuntu-latest
 
-         steps:
+    steps:
       # Step 1: Checkout code
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -72,3 +71,4 @@ jobs:
       # Step 3: Apply Terraform Changes (Manual Trigger)
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
+
